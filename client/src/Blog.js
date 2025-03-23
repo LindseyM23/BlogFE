@@ -23,6 +23,15 @@ const Blog = () => {
       navigate('/login'); // Redirect if no token
       return;
     }
+    const decoded = jwtDecode(token);
+    const now = Date.now() / 1000; // Current time in seconds
+    if (decoded.exp < now) {
+      toast.error('Session expired. Please log in again.');
+      localStorage.removeItem('token');
+      navigate('/login');
+      return;
+    }
+
     const fetchPosts = async () => {
       setLoadingPosts(true);
       try {
